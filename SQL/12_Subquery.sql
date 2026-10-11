@@ -96,6 +96,32 @@ where (genre,score) in (select genre ,max(score)
                         and votes>25000;
                         
 -- Correlated subquery
+-- The inner query depends on the outer query and is evaluated using values from the outer query.
+
+
+-- Q1 find all the movies that have a rating higher than the average rating of movies in the same genre
+use ayush;
+select * from movies m1
+where score>(select avg(score) from movies m2 
+			where m2.genre =m1.genre);
+            
+            
+-- Usage of subqueries with select 
+-- Q1get the percentage of votes for each movie compared to the total number of votes 
+
+select name ,(votes/(select sum(votes) from movies))*100 as 'vote_percentage' from movies;
+
+
+-- Q2 display all movie names ,genre ,score and avg(score) of genre
+select name ,genre,score, (select avg(score) from movies m2 where m2.genre=m1.genre) from movies m1;
+
+-- usage with having
+-- find genres having avg score>avg score of all the movies
+
+select genre from ayush.movies
+group by genre 
+having avg(score)>(select avg(score) from ayush.movies)
+
 
                         
                         
